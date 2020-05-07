@@ -1,14 +1,16 @@
 from room import Room
 import time
+from player import Player
 import linecache
 from os import system, name 
 import asyncio
+import textwrap
 
 
 # Declare all the rooms
 
 room = {
-    'outside':  Room("Outside Cave Entrance",
+    'outside':  Room("Outside",
                      "North of you, the cave mount beckons"),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
@@ -52,22 +54,48 @@ room['treasure'].s_to = room['narrow']
 #
 # If the user enters a cardinal direction, attempt to move to the room there.
 # Print an error message if the movement isn't allowed.
-#
+#? Way to read files based on lines given  
+    # count = 0
+
+    # with open("src/story.txt") as fp: 
+    #     while True: 
+    #             count += 1
+    #             line = fp.readline() 
+    #             time.sleep(2)
+
+  
+    #             if not line or count == 10: 
+    #                 break
+    #             if count > 1:
+    #                 print("{}".format(line.strip())) 
+
+
+
 # If the user enters "q", quit the game.
+
+system('clear') 
+# wrapper = textwrap.TextWrapper(width=50) 
+
+playerName = input("what is your name?\n")
+
+player1 = Player(f'{playerName}')
+print(player1)
 async def welcome():
-    system('clear') 
     time.sleep(1)
     welcome = [linecache.getline('src/story.txt',2),
     linecache.getline('src/story.txt',3),linecache.getline('src/story.txt',5),
     linecache.getline('src/story.txt',7),linecache.getline('src/story.txt',8),
     linecache.getline('src/story.txt',10),
     linecache.getline('src/story.txt',12),]
+
+
     linecache.clearcache()
     for i in welcome:
         time.sleep(1)
         print(i)
     print("Fear sets in, your next response is Crucial... The wrong choice and its all over \n")
-    print(' Act Tough and attempt to break the door down - [n]\n', "Beg for my life - [w]\n", "Ask about the game and play along for now - [e]\n", "Refuse to play at any cost - [s]\n ")
+    print(' Act Tough and attempt to break the door down - [n]\n', "Beg for my life - [w]\n",
+     "Ask about the game and play along for now - [e]\n", "Refuse to play at any cost - [s]\n ")
 
 # welcome()
 
@@ -92,15 +120,22 @@ while True:
         if move == "n":
             print("You tell the Voice it can go $%@# itself and begin kicking the door\n", "Gas starts seeping in, and the door isn't budging . .  .")
             time.sleep(1)
+            print("Game Over")
             break
 
         if move == "w":
             print("You Beg for your Life, you begin talking about your family and how they need you...\n", "The door opens .. I am outside")
-            room['outside'].move()
+            room['outside'].move(player1)
+            # --------
+            # room['foyer'].move(player1)
+            room['outside'].n_to.move(player1)
             # break
 
+
         if move == "e":
-            print("Not a valid response, Please Read What is Allowed!!! ")
+            print('You hear a response - "The Objective is simple, Escape".. The door opens, "Ill  reward your cooperation by telling you this:\n"',
+            "you are not the only one who woke up in this situation\n", "We don't care how you escape but if you do, you'll be rewarded with more money then you'll ever need")
+            room['outside'].move(player1)
             time.sleep(1)             
             # break
 
